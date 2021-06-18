@@ -11,6 +11,7 @@ import GameplayKit
 class GameScene: SKScene {
     
     var boat: SKSpriteNode?
+    var lastPosition: CGPoint = CGPoint(x: 0, y: 0)
     
     override func didMove(to view: SKView) {
         // Muda a cor do fundo
@@ -32,13 +33,20 @@ class GameScene: SKScene {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
+            // Pega a nova posição:
+            let location = t.location(in: self)
+            let newX = self.lastPosition.x + location.x
+            let newY = self.lastPosition.y + location.y
+            let newPosition = CGPoint(x: newX, y: newY)
+            
+            // Cria e adiciona ação para mover
+            let move = SKAction.move(to: newPosition, duration: 2.5)
+            self.boat!.run(move)
             
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches {
-            
-        }
+        self.lastPosition = self.boat!.position
     }
 }
