@@ -33,13 +33,21 @@ class GameScene: SKScene {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
-            // Pega a nova posição:
             let location = t.location(in: self)
+            
+            // Pega a nova posição:
             let newX = self.lastPosition.x + location.x
             let newY = self.lastPosition.y + location.y
             let newPosition = CGPoint(x: newX, y: newY)
             
-            // Cria e adiciona ação para mover
+            // Pega o ângulo da rotação em radianos:
+            let startPos = CGPoint(x: location.x + lastPosition.x - boat!.position.x, y: location.y + lastPosition.y - boat!.position.y)
+            let relativeToStart = CGPoint(x: startPos.x + location.x, y: startPos.y + location.y)
+            let radians = atan2(relativeToStart.y, relativeToStart.x)
+            
+            // Cria e adiciona ação para rotacionar e mover:
+            let rotate = SKAction.rotate(toAngle: radians, duration: 0.1, shortestUnitArc: true)
+            self.boat!.run(rotate)
             let move = SKAction.move(to: newPosition, duration: 2.5)
             self.boat!.run(move)
             
